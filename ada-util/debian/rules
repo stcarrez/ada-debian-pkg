@@ -1,0 +1,85 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+$(foreach line,$(shell sed -n '\
+  s/^ gnat, gnat-\([0-9.]\+\),$$/ \
+    GNAT_VERSION:=\1 \
+  /p;\
+  s/^Package: libada-util\([0-9.]\+\)$$/ \
+    soname:=libada_util.so.\1 \
+  /p;\
+  ' debian/control),$(eval $(line)))
+
+DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+include debian/rules.inc
+
+ADAFLAGS += -gnatafno -gnatVa -gnatwa
+
+#CFLAGS += `pkg-config --cflags $(filter-out dummy,$(SSL)) zlib`
+#LDLIBS := `pkg-config --libs   $(filter-out dummy,$(SSL)) zlib` -llber -lldap
+
+# Circumvent #760211. Since LDFLAGS contains --as-needed, this setting
+# only takes effect on architectures triggering the bug.
+LDLIBS += -lpthread
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-shared \
+	   --enable-link-options-util=--no-as-needed,-ldl,--as-needed
+
+override_dh_auto_build-arch:
+	make all
+
+override_dh_install::
+	sed -e s,ALI_INSTALL,$(ALI_DIR), \
+	    -e s,ADS_INSTALL,$(ADS_DIR), \
+	    -e s,LIB_INSTALL,$(SO_DIR), \
+	    < debian/util_config.gpr.tmpl > debian/util_config.gpr
+	dh_install --package=libada-util2-dev \
+	   debian/util_config.gpr $(GPR_DIR)
+
+util_SRCDIR := src src/os-linux src/xml src/asm-intrinsic src/http
+util_LNAME = libada_util
+util_SONAME = libada_util.so.1.9.0
+util_ANAME = libada_util.a
+util_LIB_PKG = libada-util1.9
+util_DEV_PKG = libada-util7-dev
+util_GPR = util.gpr
+
+util_curl_SRCDIR := src/http/curl
+util_curl_LNAME = libada_util_curl
+util_curl_SONAME = libada_util_curl.so.1.9.0
+util_curl_ANAME = libada_util_curl.a
+util_curl_LIB_PKG = libada-util-curl1.9
+util_curl_DEV_PKG = libada-util-curl7-dev
+util_curl_GPR = util_http_curl.gpr
+
+util_aws_SRCDIR := src/http/aws
+util_aws_LNAME = libada_util_aws
+util_aws_SONAME = libada_util_aws.so.1.9.0
+util_aws_ANAME = libada_util_aws.a
+util_aws_LIB_PKG = libada-util-aws1.9
+util_aws_DEV_PKG = libada-util-aws7-dev
+util_aws_GPR = util_http_aws.gpr
+
+util_unit_SRCDIR := testutil testutil/ahven
+util_unit_LNAME = libada_util_unit
+util_unit_SONAME = libada_util_unit.so.1.9.0
+util_unit_ANAME = libada_util_unit.a
+util_unit_LIB_PKG = libada-util-unit1.9
+util_unit_DEV_PKG = libada-util-unit7-dev
+util_unit_GPR = util_unit.gpr
+
+# To debug an instantiation, replace eval with error:
+$(foreach library, \
+  util util_curl util_aws util_unit \
+  ,$(eval $(call library_template)))

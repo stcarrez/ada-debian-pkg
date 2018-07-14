@@ -1,0 +1,23 @@
+libada-util (1.9.0) unstable; urgency=medium
+
+  * Update for Ada util 1.9
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sat, 16 Jun 2018 11:36:11 +0200
+
+libada-util (1.8.0) testing; urgency=low
+
+  * Update for Ada util 1.8
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Wed, 23 Dec 2015 15:03:21 +0200
+
+libada-util (1.7.1) testing; urgency=low
+
+  * Fix build for XmlAda 2014
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Fri, 16 May 2014 21:05:41 +0200
+
+libada-util (1.7.0) testing; urgency=low
+
+  * Initial Release.
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sun, 13 Oct 2013 18:51:41 +0200
