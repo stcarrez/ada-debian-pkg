@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+$(foreach line,$(shell sed -n '\
+  s/^ gnat, gnat-\([0-9.]\+\),$$/ \
+    GNAT_VERSION:=\1 \
+  /p;\
+  s/^Package: libada-swagger\([0-9.]\+\)$$/ \
+    soname:=libada_swagger.so.\1 \
+  /p;\
+  ' debian/control),$(eval $(line)))
+
+DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+include debian/rules.inc
+
+ADAFLAGS += -gnatafno -gnatVa -gnatwa
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-shared
+
+override_dh_auto_build-arch:
+	make all
+
+swagger_SRCDIR := src
+swagger_LNAME = libada_swagger
+swagger_SONAME = libada_swagger.so.0.1.0
+swagger_ANAME = libada_swagger.a
+swagger_LIB_PKG = libada-swagger0.1.0
+swagger_DEV_PKG = libada-swagger7-dev
+swagger_GPR = swagger.gpr
+
+swagger_server_SRCDIR := src/server
+swagger_server_LNAME = libada_swagger_server
+swagger_server_SONAME = libada_swagger_server.so.0.1.0
+swagger_server_ANAME = libada_swagger_server.a
+swagger_server_LIB_PKG = libada-swagger-server0.1.0
+swagger_server_DEV_PKG = libada-swagger-server7-dev
+swagger_server_GPR = swagger_server.gpr
+
+# To debug an instantiation, replace eval with error:
+$(foreach library, \
+  swagger swagger_server \
+  ,$(eval $(call library_template)))

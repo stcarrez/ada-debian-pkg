@@ -1,0 +1,5 @@
+libada-swagger (1.0.0) unstable; urgency=medium
+
+  * Initial release to setup a debian library and development package
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sat, 14 Jul 2018 16:59:06 +0200
