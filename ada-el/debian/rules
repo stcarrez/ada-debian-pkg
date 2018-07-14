@@ -39,7 +39,7 @@ el_SRCDIR := src
 el_LNAME = libada_el
 el_SONAME = libada_el.so.1.6.1
 el_ANAME = libada_el.a
-el_LIB_PKG = libada-el1.6
+el_LIB_PKG = libada-el1.6.1
 el_DEV_PKG = libada-el7-dev
 el_GPR = el.gpr
 

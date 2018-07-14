@@ -12,7 +12,7 @@ Homepage: https://github.com/stcarrez/ada-el/
 Vcs-Git: https://github.com/stcarrez/ada-debian-pkg.git
 Vcs-Browser: https://github.com/stcarrez/ada-debian-pkg
 
-Package: libada-el1.6
+Package: libada-el1.6.1
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -25,7 +25,7 @@ Description: Ada implementation of Java Unified Expression Language (runtime)
 Package: libada-el7-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libada-el1.6 (= ${binary:Version}),
+Depends: ${misc:Depends}, libada-el1.6.1 (= ${binary:Version}),
  libada-util7-dev,
  gnat
 Description: Ada implementation of Java Unified Expression Language
