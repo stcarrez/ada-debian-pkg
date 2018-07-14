@@ -1,0 +1,67 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+$(foreach line,$(shell sed -n '\
+  s/^ gnat, gnat-\([0-9.]\+\),$$/ \
+    GNAT_VERSION:=\1 \
+  /p;\
+  s/^Package: libada-ado\([0-9.]\+\)$$/ \
+    soname:=libada_ado.so.\1 \
+  /p;\
+  ' debian/control),$(eval $(line)))
+
+DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+include debian/rules.inc
+
+ADAFLAGS += -gnatafno -gnatVa -gnatwa
+
+# Circumvent #760211. Since LDFLAGS contains --as-needed, this setting
+# only takes effect on architectures triggering the bug.
+LDLIBS += -lpthread
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-shared
+
+override_dh_auto_build-arch:
+	make all
+
+ado_SRCDIR := src
+ado_LNAME = libada_ado
+ado_SONAME = libada_ado.so.1.2.0
+ado_ANAME = libada_ado.a
+ado_LIB_PKG = libada-ado1.2
+ado_DEV_PKG = libada-ado7-dev
+ado_GPR = ado.gpr
+
+ado_mysql_SRCDIR := src/mysql
+ado_mysql_LNAME = libada_ado_mysql
+ado_mysql_SONAME = libada_ado_mysql.so.1.2.0
+# There is no static library.
+# ado_mysql_ANAME = libada_ado_mysql.a
+ado_mysql_LIB_PKG = libada-ado-mysql1.2
+ado_mysql_DEV_PKG = libada-ado-mysql7-dev
+ado_mysql_GPR = ado_mysql.gpr
+
+ado_sqlite_SRCDIR := src/sqlite
+ado_sqlite_LNAME = libada_ado_sqlite
+ado_sqlite_SONAME = libada_ado_sqlite.so.1.2.0
+# There is no static library.
+# ado_sqlite_ANAME = libada_ado_sqlite.a
+ado_sqlite_LIB_PKG = libada-ado-sqlite1.2
+ado_sqlite_DEV_PKG = libada-ado-sqlite7-dev
+ado_sqlite_GPR = ado_sqlite.gpr
+
+# To debug an instantiation, replace eval with error:
+$(foreach library, \
+  ado ado_mysql ado_sqlite \
+  ,$(eval $(call library_template)))
