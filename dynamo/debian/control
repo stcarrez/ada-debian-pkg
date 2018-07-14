@@ -1,0 +1,22 @@
+Source: dynamo
+Priority: optional
+Section: devel
+Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
+Build-Depends: debhelper (>= 10), autotools-dev,
+ gnat, gnat-7,
+# This line is parsed by debian/rules.
+ gprbuild (>= 2015-2)
+# 2015-2 is compatible with gnat-6
+Standards-Version: 4.1.4
+Homepage: https://github.com/stcarrez/dynamo/
+Vcs-Git: https://github.com/stcarrez/ada-debian-pkg.git
+Vcs-Browser: https://github.com/stcarrez/ada-debian-pkg
+
+Package: dynamo
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ada Application Generator
+ Dynamo is a command to help developers write an Ada Application
+ using the ASF, ADO, AWA or Gtk libraries.  It provides several commands to
+ setup a new project, generate the Ada code from UML models.
