@@ -1,0 +1,41 @@
+Source: libada-wiki
+Priority: optional
+Section: libdevel
+Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
+Build-Depends: debhelper (>= 10), autotools-dev,
+ gnat, gnat-7,
+# This line is parsed by debian/rules.
+ gprbuild (>= 2015-2)
+# 2015-2 is compatible with gnat-6
+Standards-Version: 4.1.4
+Homepage: https://github.com/stcarrez/ada-wiki/
+Vcs-Git: https://github.com/stcarrez/ada-debian-pkg.git
+Vcs-Browser: https://github.com/stcarrez/ada-debian-pkg
+
+Package: libada-wiki1.1.0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ada Wiki Engine (runtime)
+ Ada Wiki is a small library that provides and focuses only on the Wiki
+ engine.
+ .
+ The library allows one to:
+  * Parse a wiki text such as Mediawiki, Creole, PhpBB, Dotclear and Google Code
+  * Parse HTML content in embedded wiki text,
+  * Filter out the wiki, HTML or text through customizable filters,
+  * Render the wiki text in HTML, text or another wiki format
+
+Package: libada-wiki7-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libada-wiki1.1.0 (= ${binary:Version}), gnat
+Description: Ada Wiki Engine (Development)
+ Ada Wiki is a small library that provides and focuses only on the Wiki
+ engine.
+ .
+ The library allows one to:
+  * Parse a wiki text such as Mediawiki, Creole, PhpBB, Dotclear and Google Code
+  * Parse HTML content in embedded wiki text,
+  * Filter out the wiki, HTML or text through customizable filters,
+  * Render the wiki text in HTML, text or another wiki format

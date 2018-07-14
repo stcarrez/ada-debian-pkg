@@ -1,0 +1,5 @@
+libada-wiki (1.1.0) unstable; urgency=medium
+
+  * Initial release to setup a debian library and development package
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sun, 24 Jun 2018 10:01:06 +0200
