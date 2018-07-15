@@ -1,0 +1,112 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+$(foreach line,$(shell sed -n '\
+  s/^ gnat, gnat-\([0-9.]\+\),$$/ \
+    GNAT_VERSION:=\1 \
+  /p;\
+  s/^Package: libada-awa\([0-9.]\+\)$$/ \
+    soname:=libawa.so.\1 \
+  /p;\
+  ' debian/control),$(eval $(line)))
+
+DH_VERBOSE=1
+export DH_OPTIONS=-v
+
+include debian/rules.inc
+
+# ADAFLAGS += -gnatafno -gnatVa -gnatwa
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-shared
+
+override_dh_auto_build-arch:
+	make all
+
+ali=7
+sover=1.1.0
+pkgver=1.1.0
+
+awa_SRCDIR := src
+awa_LNAME = libawa
+awa_SONAME = libawa.so.$(sover)
+awa_ANAME = libawa.a
+awa_LIB_PKG = libawa$(pkgver)
+awa_DEV_PKG = libawa$(ali)-dev
+awa_GPR = awa.gpr
+
+awa_unit_SRCDIR := awaunit
+awa_unit_LNAME = libawa_unit
+awa_unit_SONAME = libawa_unit.so.$(sover)
+awa_unit_ANAME = libawa_unit.a
+awa_unit_LIB_PKG = libawa-unit$(pkgver)
+awa_unit_DEV_PKG = libawa-unit$(ali)-dev
+awa_unit_GPR = awa_unit.gpr
+
+awa_markedit_LIB_PKG = libawa-markedit$(pkgver)
+awa_trumbowyg_LIB_PKG = libawa-trumbowyg$(pkgver)
+
+define awa_declare_plugin
+awa_$(plugin)_SRCDIR := plugin/awa-$(plugin)/src plugin/awa-$(plugin)/src/model
+awa_$(plugin)_LNAME = libawa_$(plugin)
+awa_$(plugin)_SONAME = libawa_$(plugin).so.$(sover)
+awa_$(plugin)_ANAME = libawa_$(plugin).a
+awa_$(plugin)_LIB_PKG = libawa-$(plugin)$(pkgver)
+awa_$(plugin)_DEV_PKG = libawa-$(plugin)$(ali)-dev
+awa_$(plugin)_GPR = awa_$(plugin).gpr
+
+distrib/awa_$(plugin).gpr:
+	cp $(CURDIR)/plugins/awa-$(plugin)/distrib/awa_$(plugin).gpr $(CURDIR)/distrib/awa_$(plugin).gpr
+
+endef
+
+awa_ada_plugins=blogs changelogs comments counters \
+ countries images jobs mail questions settings \
+ setup storages tags votes wikis workspaces
+
+awa_pkg_plugins=awa_blogs awa_changelogs awa_comments awa_counters \
+ awa_countries awa_images awa_jobs awa_mail awa_questions awa_settings \
+ awa_setup awa_storages awa_tags awa_votes awa_wikis awa_workspaces
+
+$(foreach plugin, \
+  $(awa_ada_plugins) \
+  ,$(eval $(call awa_declare_plugin)))
+
+# To debug an instantiation, replace eval with error:
+$(foreach library, \
+  awa awa_unit $(awa_pkg_plugins) \
+  ,$(eval $(call library_template)))
+
+override_dh_install::
+	# Files installed in the dynamo/awa directory are part of the binary
+	# because they are used by servers.
+	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr install
+
+define awa_plugin_template
+
+  override_dh_install::
+	dh_installdirs --package=$($(plugin)_LIB_PKG) \
+	   usr/share/dynamo/$(plugin)
+	dirs=`cd $(CURDIR)/debian/tmp/usr/share/dynamo && find $(plugin) -type d`; \
+	for i in $$dirs; do \
+		dh_installdirs --package=$($(plugin)_LIB_PKG) usr/share/dynamo/$$i ; \
+	done
+	files=`cd $(CURDIR)/debian/tmp/usr/share/dynamo && find $(plugin) -type f`; \
+	for i in $$files; do \
+	  dir=`dirname $$i`; \
+	  dh_install --package=$($(plugin)_LIB_PKG) usr/share/dynamo/$$i usr/share/dynamo/$$dir ; \
+	done
+
+endef
+
+$(foreach library, \
+ awa_markedit awa_trumbowyg $(awa_pkg_plugins) \
+  ,$(eval $(call awa_plugin_template)))
