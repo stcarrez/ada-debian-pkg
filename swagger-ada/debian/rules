@@ -51,3 +51,20 @@ swagger_server_GPR = swagger_server.gpr
 $(foreach library, \
   swagger swagger_server \
   ,$(eval $(call library_template)))
+
+override_dh_install::
+	# Files installed in the web/ directory are part of the binary
+	# server package.
+	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr install
+	dh_installdirs --package=$(swagger_server_LIB_PKG) \
+	   usr/share/swagger-ada
+	dh_installdirs --package=$(swagger_server_LIB_PKG) \
+	   usr/share/swagger-ada/web
+	dh_installdirs --package=$(swagger_server_LIB_PKG) \
+	   usr/share/swagger-ada/web/ui
+	files=`cd $(CURDIR)/debian/tmp/usr/share/swagger-ada && find web -type f`; \
+	for i in $$files; do \
+		dir=`dirname $$i`; \
+		dh_install --package=$(swagger_server_LIB_PKG) \
+		   usr/share/swagger-ada/$$i usr/share/swagger-ada/$$dir ; \
+	done
