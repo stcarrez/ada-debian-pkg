@@ -97,6 +97,59 @@ define library_template
 
 endef
 
+define awa_plugin_template
+# Parameters:
+# _SRCDIR: directory containing the sources files
+# _deps_int       : used in -aI -aO -l for libs built by this deb source
+# _deps_int_direct: subset used for .gpr and ada:Depends
+# _deps_ext       : used in -aI -aO -l for libs from packaged Build-Depends
+# _deps_ext_direct: subset used for .gpr and ada:Depends
+# _deps_gnarl     : used in -l, should be empty or gnarl-BV
+# For any dependency d, $(d)_DEV_PKG: deb -dev package for $(d)
+# For any internal dependency d, $(d)_SRCDIR as above.
+
+  override_dh_install::
+  # dynamic library
+	chrpath -d $($(library)_DIR)/lib/$(library)/relocatable/$($(library)_SONAME)
+	dh_install --package=$($(library)_LIB_PKG) \
+	  $($(library)_DIR)/lib/$(library)/relocatable/$($(library)_SONAME) \
+	  $(SO_DIR)
+  # static library
+	test -z "$($(library)_ANAME)" || \
+	dh_install --package=$($(library)_DEV_PKG) \
+	  $($(library)_DIR)/lib/$(library)/static/$($(library)_ANAME) \
+	  $(A_DIR)
+  # development symbolic link
+	dh_link --package=$($(library)_DEV_PKG) \
+	  $(SO_DIR)/$($(library)_SONAME) \
+	  $(SO_DIR)/$($(library)_LNAME).so
+  # ALI files
+	dh_install --package=$($(library)_DEV_PKG) \
+	  $($(library)_DIR)/lib/$(library)/relocatable/*.ali \
+	  $(ALI_DIR)/$(library)
+  # Sources
+	for dir in $($(library)_SRCDIR); do \
+	  dh_install --package=$($(library)_DEV_PKG) \
+	     $$$$dir/*.ad[bs] $(ADS_DIR)/$(library); \
+	done
+  # Substitution variables for the control file.
+	echo 'ada:Depends=gnat, gnat-$(GNAT_VERSION), \
+	  $(foreach l, $($(library)_deps_int_direct), $($(l)_DEV_PKG) (=$$$${binary:Version}),) \
+	  $(foreach l, $($(library)_deps_ext_direct), $($(l)_DEV_PKG),) \
+	  $($(library)_LIB_PKG)' \
+	  >> debian/$($(library)_DEV_PKG).substvars
+
+  # Externally built project installed for end users.
+  override_dh_install::
+	sed -e s,LIBRARY_TYPE,dynamic, \
+	   $($(library)_DIR)/distrib/$($(library)_GPR) \
+	   > $($(library)_DIR)/obj/$($(library)_GPR)
+	dh_install --package=$($(library)_DEV_PKG) \
+	  $($(library)_DIR)/obj/$($(library)_GPR) \
+	  $(GPR_DIR)
+
+endef
+
 obj/shared obj/static: | obj
 obj obj/shared obj/static:
 	mkdir $@
