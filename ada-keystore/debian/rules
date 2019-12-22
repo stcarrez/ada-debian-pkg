@@ -36,4 +36,10 @@ override_dh_auto_install:
 	dh_install debian/tmp/usr/bin/akt /usr/bin
 	dh_installman debian/tmp/usr/share/man/man1/akt.1
 	dh_strip
+	files=`cd $(CURDIR)/debian/tmp/usr/share/akt && find . -type f`; \
+        for i in $$files; do \
+	  dir=`dirname $$i`; \
+	  dh_install debian/tmp/usr/share/akt/$$i usr/share/akt/$$dir ; \
+        done
 
+	
