@@ -10,47 +10,37 @@ $(foreach line,$(shell sed -n '\
   s/^ gnat, gnat-\([0-9.]\+\),$$/ \
     GNAT_VERSION:=\1 \
   /p;\
-  s/^Package: libada-asf\([0-9.]\+\)$$/ \
-    soname:=libada_asf.so.\1 \
+  s/^Package: libasf\([0-9.]\+\)$$/ \
+    soname:=libasf.so.\1 \
   /p;\
   ' debian/control),$(eval $(line)))
 
 DH_VERBOSE=1
 export DH_OPTIONS=-v
 
-include debian/rules.inc
-
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
 ADAFLAGS += -gnatafno -gnatVa -gnatwa
 
 %:
-	dh $@
+	dh $@ --with ada-library
 
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-shared
+	dh_auto_configure -- --enable-shared --enable-default-shared
+
+override_dh_auto_build:
+	make GPRFLAGS="-R -m -q"
+
+override_dh_auto_test::
+
+override_dh_auto_install::
+
 
 override_dh_auto_build-arch:
 	make all
 
-asf_SRCDIR := src
-asf_LNAME = libada_asf
-asf_SONAME = libada_asf.so.1.2.0
-asf_ANAME = libada_asf.a
-asf_LIB_PKG = libada-asf1.2.0
-asf_DEV_PKG = libada-asf7-dev
-asf_GPR = asf.gpr
-
-asf_unit_SRCDIR := asfunit
-asf_unit_LNAME = libada_asf_unit
-asf_unit_SONAME = libada_asf_unit.so.1.2.0
-asf_unit_ANAME = libada_asf_unit.a
-asf_unit_LIB_PKG = libada-asf-unit1.2.0
-asf_unit_DEV_PKG = libada-asf-unit7-dev
-asf_unit_GPR = asf_unit.gpr
-
-# To debug an instantiation, replace eval with error:
-$(foreach library, \
-  asf asf_unit \
-  ,$(eval $(call library_template)))
+asf_LIB_PKG = libasf1.2.0
 
 override_dh_install::
 	# Files installed in the dynamo/asf directory are part of the binary
@@ -67,3 +57,4 @@ override_dh_install::
 		dir=`dirname $$i`; \
 		dh_install -p$(asf_LIB_PKG) usr/share/dynamo/$$i usr/share/dynamo/$$dir ; \
 	done
+	rm -rf $(CURDIR)/debian/tmp

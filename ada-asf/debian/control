@@ -1,18 +1,22 @@
-Source: libada-asf
+Source: libasf
 Priority: optional
 Section: libdevel
 Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
 Build-Depends: debhelper (>= 10), autotools-dev,
+ dh-ada-library,
  gnat, gnat-7,
 # This line is parsed by debian/rules.
- gprbuild (>= 2015-2)
+ gprbuild (>= 2015-2),
 # 2015-2 is compatible with gnat-6
+ libservletada1-dev,
+ libservletada-unit1-dev,
+ libutilada-xml1-dev
 Standards-Version: 4.1.4
 Homepage: https://github.com/stcarrez/ada-asf/
-Vcs-Git: https://github.com/stcarrez/ada-debian-pkg.git
-Vcs-Browser: https://github.com/stcarrez/ada-debian-pkg
+Vcs-Git: https://github.com/stcarrez/ada-asf.git -b debian-gnat-7
+Vcs-Browser: https://github.com/stcarrez/ada-asf/tree/debian-gnat-7
 
-Package: libada-asf1.2.0
+Package: libasf1.4.1
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -23,7 +27,7 @@ Description: Ada Server Faces for web applications (runtime)
  .
  This package contains the runtime libraries.
 
-Package: libada-asf-unit1.2.0
+Package: libasf-unit1.4.1
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -37,12 +41,10 @@ Description: Ada Server Faces unit test framework (runtime)
  .
  This package contains the runtime libraries.
 
-Package: libada-asf7-dev
+Package: libasf1-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libada-asf1.2.0 (= ${binary:Version}),
- libada-servlet7-dev,
- gnat
+Depends: ${misc:Depends}, ${ada:Depends}
 Description: Ada Server Faces for web applications (Development files)
  Ada Server Faces is a web framework which follows the Java Server Faces
  specification (JSR 252, JSR 314 and JSR 344).  It defines a component
@@ -51,12 +53,10 @@ Description: Ada Server Faces for web applications (Development files)
  The package contains the Ada development files to develop web applications
  using the Ada Server Faces component driven framework.
 
-Package: libada-asf-unit7-dev
+Package: libasf-unit1-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libada-asf1.2.0 (= ${binary:Version}),
- libada-servlet-unit7-dev,
- gnat
+Depends: ${misc:Depends}, ${ada:Depends}
 Description: Ada Server Faces unit test framework (Development files)
  The package provides an Ada unit test framework to help in testing
  an Ada web application.
