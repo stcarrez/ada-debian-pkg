@@ -5,12 +5,18 @@ Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
 Build-Depends: debhelper (>= 10), autotools-dev,
  gnat, gnat-7,
 # This line is parsed by debian/rules.
- gprbuild (>= 2015-2)
+ gprbuild (>= 2015-2),
 # 2015-2 is compatible with gnat-6
+ libxmlada-sax7-dev,
+ libutilada-sys1-dev,
+ libutilada-xml1-dev,
+ libasf1-dev,
+ libado1-dev,
+ libgpr1-dev
 Standards-Version: 4.1.4
 Homepage: https://github.com/stcarrez/dynamo/
-Vcs-Git: https://github.com/stcarrez/ada-debian-pkg.git
-Vcs-Browser: https://github.com/stcarrez/ada-debian-pkg
+Vcs-Git: https://github.com/stcarrez/dynamo.git -b debian-gnat-7
+Vcs-Browser: https://github.com/stcarrez/dynamo/tree/debian-gnat-7
 
 Package: dynamo
 Section: devel
