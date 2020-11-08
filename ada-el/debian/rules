@@ -27,4 +27,11 @@ ADAFLAGS += -gnatafno -gnatVa -gnatwa
 	dh $@ --with ada-library
 
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-shared
+	dh_auto_configure -- --enable-shared --enable-default-shared
+
+override_dh_auto_build:
+	make GPRFLAGS="-R -m -q"
+
+override_dh_auto_test::
+
+override_dh_auto_install::
