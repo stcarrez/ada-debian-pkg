@@ -10,36 +10,28 @@ $(foreach line,$(shell sed -n '\
   s/^ gnat, gnat-\([0-9.]\+\),$$/ \
     GNAT_VERSION:=\1 \
   /p;\
-  s/^Package: libada-security\([0-9.]\+\)$$/ \
-    soname:=libada_security.so.\1 \
+  s/^Package: libsecurity\([0-9.]\+\)$$/ \
+    soname:=libsecurity.so.\1 \
   /p;\
   ' debian/control),$(eval $(line)))
 
 DH_VERBOSE=1
 export DH_OPTIONS=-v
 
-include debian/rules.inc
-
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
 ADAFLAGS += -gnatafno -gnatVa -gnatwa
 
 %:
-	dh $@
+	dh $@ --with ada-library
 
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-shared
+	dh_auto_configure -- --enable-shared --enable-default-shared
 
-override_dh_auto_build-arch:
-	make all
+override_dh_auto_build:
+	make GPRFLAGS="-R -m -q"
 
-security_SRCDIR := src
-security_LNAME = libada_security
-security_SONAME = libada_security.so.1.2.0
-security_ANAME = libada_security.a
-security_LIB_PKG = libada-security1.2.0
-security_DEV_PKG = libada-security7-dev
-security_GPR = security.gpr
+override_dh_auto_test::
 
-# To debug an instantiation, replace eval with error:
-$(foreach library, \
-  security \
-  ,$(eval $(call library_template)))
+override_dh_auto_install::
