@@ -1,16 +1,16 @@
-ada-keystore (1.2.1) unstable; urgency=medium
+keystoreada (1.2.1) unstable; urgency=medium
 
   * Update release 1.2.1.
 
- -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sat, 7 Nov 2020 16:18:02 +0100
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sun, 8 Nov 2020 18:38:02 +0100
 
-ada-keystore (1.0.0) unstable; urgency=medium
+keystoreada (1.0.0) unstable; urgency=medium
 
   * Update release.
 
  -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sun, 22 Dec 2019 16:53:01 +0100
 
-ada-keystore (0.1.0) unstable; urgency=medium
+keystoreada (0.1.0) unstable; urgency=medium
 
   * Initial release.
 
