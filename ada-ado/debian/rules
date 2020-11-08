@@ -10,58 +10,59 @@ $(foreach line,$(shell sed -n '\
   s/^ gnat, gnat-\([0-9.]\+\),$$/ \
     GNAT_VERSION:=\1 \
   /p;\
-  s/^Package: libada-ado\([0-9.]\+\)$$/ \
-    soname:=libada_ado.so.\1 \
+  s/^Package: libado\([0-9.]\+\)$$/ \
+    soname:=libado.so.\1 \
   /p;\
   ' debian/control),$(eval $(line)))
 
 DH_VERBOSE=1
 export DH_OPTIONS=-v
 
-include debian/rules.inc
-
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
 ADAFLAGS += -gnatafno -gnatVa -gnatwa
 
-# Circumvent #760211. Since LDFLAGS contains --as-needed, this setting
-# only takes effect on architectures triggering the bug.
-LDLIBS += -lpthread
-
 %:
-	dh $@
+	dh $@ --with ada-library
 
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-shared
+	dh_auto_configure -- --enable-shared --enable-default-shared
 
 override_dh_auto_build-arch:
-	make all
+	make GPRFLAGS="-R -m -q"
 
-ado_SRCDIR := src
-ado_LNAME = libada_ado
-ado_SONAME = libada_ado.so.1.2.0
-ado_ANAME = libada_ado.a
-ado_LIB_PKG = libada-ado1.2
-ado_DEV_PKG = libada-ado7-dev
-ado_GPR = ado.gpr
+override_dh_auto_test::
 
-ado_mysql_SRCDIR := src/mysql
-ado_mysql_LNAME = libada_ado_mysql
-ado_mysql_SONAME = libada_ado_mysql.so.1.2.0
-# There is no static library.
-# ado_mysql_ANAME = libada_ado_mysql.a
-ado_mysql_LIB_PKG = libada-ado-mysql1.2
-ado_mysql_DEV_PKG = libada-ado-mysql7-dev
-ado_mysql_GPR = ado_mysql.gpr
+override_dh_auto_install::
 
-ado_sqlite_SRCDIR := src/sqlite
-ado_sqlite_LNAME = libada_ado_sqlite
-ado_sqlite_SONAME = libada_ado_sqlite.so.1.2.0
-# There is no static library.
-# ado_sqlite_ANAME = libada_ado_sqlite.a
-ado_sqlite_LIB_PKG = libada-ado-sqlite1.2
-ado_sqlite_DEV_PKG = libada-ado-sqlite7-dev
-ado_sqlite_GPR = ado_sqlite.gpr
+version=2.1.1
 
-# To debug an instantiation, replace eval with error:
-$(foreach library, \
-  ado ado_mysql ado_sqlite \
-  ,$(eval $(call library_template)))
+ado_LIB_PKG = libado$(version)
+ado_DEV_PKG = libado1-dev
+
+ado_mysql_LIB_PKG = libado-mysql$(version)
+ado_sqlite_LIB_PKG = libado-sqlite$(version)
+ado_postgresql_LIB_PKG = libado-postgresql$(version)
+
+override_dh_install::
+	dh_installdirs --package=$(ado_DEV_PKG) \
+	   usr/share/dynamo/ado/db
+	for i in `cd $(CURDIR)/db && ls *.xml`; do \
+		dh_install -p$(ado_DEV_PKG) db/$$i usr/share/dynamo/ado/db ; \
+	done
+	dh_installdirs --package=$(ado_mysql_LIB_PKG) \
+	   usr/share/dynamo/ado/db/mysql
+	for i in `ls $(CURDIR)/db/mysql`; do \
+		dh_install -p$(ado_mysql_LIB_PKG) db/mysql/$$i usr/share/dynamo/ado/db/mysql ; \
+	done
+	dh_installdirs --package=$(ado_sqlite_LIB_PKG) \
+	   usr/share/dynamo/ado/db/sqlite
+	for i in `ls $(CURDIR)/db/sqlite`; do \
+		dh_install -p$(ado_sqlite_LIB_PKG) db/sqlite/$$i usr/share/dynamo/ado/db/sqlite ; \
+	done
+	dh_installdirs --package=$(ado_postgresql_LIB_PKG) \
+	   usr/share/dynamo/ado/db/postgresql
+	for i in `ls $(CURDIR)/db/postgresql`; do \
+		dh_install -p$(ado_postgresql_LIB_PKG) db/postgresql/$$i usr/share/dynamo/ado/db/postgresql ; \
+	done
