@@ -1,4 +1,10 @@
-libada-servlet (1.2.0) unstable; urgency=medium
+libservletada (1.5.0) unstable; urgency=medium
+
+  * Update with release 1.4.0
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sun, 8 Nov 2020 16:31:06 +0100
+
+libservletada (1.2.0) unstable; urgency=medium
 
   * Initial release to setup a debian library and development package
 
