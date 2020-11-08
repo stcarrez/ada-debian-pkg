@@ -10,41 +10,21 @@ $(foreach line,$(shell sed -n '\
   s/^ gnat, gnat-\([0-9.]\+\),$$/ \
     GNAT_VERSION:=\1 \
   /p;\
-  s/^Package: libada-el\([0-9.]\+\)$$/ \
-    soname:=libada_el.so.\1 \
+  s/^Package: libelada\([0-9.]\+\)$$/ \
+    soname:=libelada.so.\1 \
   /p;\
   ' debian/control),$(eval $(line)))
 
 DH_VERBOSE=1
 export DH_OPTIONS=-v
 
-include debian/rules.inc
-
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
 ADAFLAGS += -gnatafno -gnatVa -gnatwa
 
-# Circumvent #760211. Since LDFLAGS contains --as-needed, this setting
-# only takes effect on architectures triggering the bug.
-LDLIBS += -lpthread
-
 %:
-	dh $@
+	dh $@ --with ada-library
 
 override_dh_auto_configure:
 	dh_auto_configure -- --enable-shared
-
-override_dh_auto_build-arch:
-	make all
-
-el_SRCDIR := src
-el_LNAME = libada_el
-el_SONAME = libada_el.so.1.6.1
-el_ANAME = libada_el.a
-el_LIB_PKG = libada-el1.6.1
-el_DEV_PKG = libada-el7-dev
-el_GPR = el.gpr
-
-
-# To debug an instantiation, replace eval with error:
-$(foreach library, \
-  el \
-  ,$(eval $(call library_template)))
