@@ -2,19 +2,30 @@ Source: libawa
 Priority: optional
 Maintainer: Stephane Carrez <Stephane.Carrez@gmail.com>
 Build-Depends: debhelper (>= 10), autotools-dev,
+ dh-ada-library,
  gnat, gnat-7,
 # This line is parsed by debian/rules.
- gprbuild (>= 2015-2)
-# 2015-2 is compatible with gnat-6
+ gprbuild (>= 2015-2),
+ libasf1-dev,
+ libasf-unit1-dev,
+ libado1-dev,
+ libwikiada1-dev,
+ libkeystoreada1-dev,
+ libservletada1-dev,
+ libservletada-unit1-dev,
+ libutilada-aws1-dev,
+ libutilada-xml1-dev,
+# pandoc requires texlive-fonts-extra for PDF
+ pandoc, texlive-fonts-extra,
+ python3-pandocfilters
 Standards-Version: 4.1.4
 Homepage: https://github.com/stcarrez/ada-awa/
-Vcs-Git: https://github.com/stcarrez/ada-debian-pkg.git
-Vcs-Browser: https://github.com/stcarrez/ada-debian-pkg
+Vcs-Git: https://github.com/stcarrez/ada-awa.git -b debian-gnat-7
+Vcs-Browser: https://github.com/stcarrez/ada-awa/tree/debian-gnat-7
 
-Package: libawa1.1.0
+Package: libawa2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Ada Web Application (runtime)
  Ada Web Application is a framework to build a Web Application in Ada 2012.
@@ -26,12 +37,11 @@ Description: Ada Web Application (runtime)
  .
  This package contains the runtime files for AWA.
 
-Package: libawa7-dev
+Package: libawa1-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libada-asf7-dev, libada-ado7-dev, libada-util7-dev, gnat,
- dynamo
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Ada Web Application (Development files)
  Ada Web Application is a framework to build a Web Application in Ada 2012.
  The framework provides several ready to use and extendable modules that
@@ -42,256 +52,197 @@ Description: Ada Web Application (Development files)
  .
  This package contains the development files for Ada Web Application.
 
-Package: libawa-unit1.1.0
+Package: libawa-unit2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Unit test framework for AWA (runtime)
  This library provides support and helpers for writing unit tests for AWA.
  .
  This package contains the runtime files for AWA testing framework.
 
-Package: libawa-unit7-dev
+Package: libawa-unit1-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends},
- libawa7-dev,
- libada-util-unit7-dev, libada-asf-unit7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Unit test framework for AWA (Development).
  This library provides support and helpers for writing unit tests for AWA.
 
-Package: libawa-blogs1.1.0
+Package: libawa-blogs2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
 Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-workspaces1.1.0 (= ${binary:Version}),
- libawa-comments.1.0 (= ${binary:Version}),
- libawa-images1.1.0 (= ${binary:Version}),
- libawa-counters1.1.0 (= ${binary:Version}),
- libawa-markedit1.1.0 (= ${binary:Version}),
- libawa-tags1.1.0 (= ${binary:Version})
+ libawa-flotcharts2.1.0 (= ${binary:Version}),
+ libawa-markedit2.1.0 (= ${binary:Version})
 Description: Blogs plugin for AWA (Runtime)
  This is the Blogs plugin for Ada Web Application.  The Blogs plugin provides
  a complete and ready to use blog system that can be integrated easily in an
  application.
 
-Package: libawa-blogs7-dev
+Package: libawa-blogs1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-blogs1.1.0 (= ${binary:Version}),
- libawa-tags7-dev,
- libawa-comments7-dev,
- libawa-votes7-dev,
- libawa-counters7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Blogs plugin for AWA (Development)
  This is the Blogs plugin for Ada Web Application.  The Blogs plugin provides
  a complete and ready to use blog system that can be integrated easily in an
  application.
 
-Package: libawa-changelogs1.1.0
+Package: libawa-changelogs2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Changelogs plugin for AWA (Runtime)
  This is the Changelogs plugin for Ada Web Application.
 
-Package: libawa-changelogs7-dev
+Package: libawa-changelogs1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-changelogs-1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Changelogs plugin for AWA (Development)
  This is the Changelogs plugin for Ada Web Application.
 
-Package: libawa-comments1.1.0
+Package: libawa-comments2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Comments plugin for AWA (Runtime)
  This is the Comments plugin for Ada Web Application.
 
-Package: libawa-comments7-dev
+Package: libawa-comments1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-comments1.1.0 (= ${binary:Version}),
- libawa7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Comments plugin for AWA (Development)
  This is the Comments plugin for Ada Web Application.
 
-Package: libawa-counters1.1.0
+Package: libawa-counters2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Counters plugin for AWA (Runtime)
  This is the Counters plugin for Ada Web Application.
 
-Package: libawa-counters7-dev
+Package: libawa-counters1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-counters1.1.0 (= ${binary:Version}),
- libawa7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Counters plugin for AWA (Development)
  This is the Counters plugin for Ada Web Application.
 
-Package: libawa-countries1.1.0
+Package: libawa-countries2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Countries plugin for AWA (Runtime)
  This is the Countries plugin for Ada Web Application.
 
-Package: libawa-countries7-dev
+Package: libawa-countries1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-countries1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Countries plugin for AWA (Development)
  This is the Countries plugin for Ada Web Application.
 
-Package: libawa-flotcharts1.1.0
+Package: libawa-flotcharts2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Flotcharts plugin for AWA (Runtime)
  This is the Flotcharts plugin for Ada Web Application.
 
-Package: libawa-images1.1.0
+Package: libawa-images2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-storages1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Images plugin for AWA (Runtime)
  This is the Images plugin for Ada Web Application.
 
-Package: libawa-images7-dev
+Package: libawa-images1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-images1.1.0 (= ${binary:Version}),
- libawa-storages7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
 Description: Countries plugin for AWA (Development)
  This is the Countries plugin for Ada Web Application.
 
-Package: libawa-jobs1.1.0
+Package: libawa-jobs2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Jobs plugin for AWA (Runtime)
  This is the Jobs plugin for Ada Web Application.
 
-Package: libawa-jobs7-dev
+Package: libawa-jobs1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-jobs1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Jobs plugin for AWA (Development)
  This is the Jobs plugin for Ada Web Application.
 
-Package: libawa-mail1.1.0
+Package: libawa-mail2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Mail plugin for AWA (Runtime)
  This is the Mail plugin for Ada Web Application.
 
-Package: libawa-mail7-dev
+Package: libawa-mail1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-mail1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Mail plugin for AWA (Development)
  This is the Mail plugin for Ada Web Application.
 
-Package: libawa-markedit1.1.0
+Package: libawa-markedit2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Markedit plugin for AWA (Runtime)
  This is the Markedit plugin for Ada Web Application.
 
-Package: libawa-questions1.1.0
+Package: libawa-questions2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
 Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-tags1.1.0 (= ${binary:Version}),
- libawa-workspaces1.1.0 (= ${binary:Version})
+ libawa-markedit2.1.0 (= ${binary:Version})
 Description: Question plugin for AWA (Runtime)
  This is the Question plugin for Ada Web Application.
 
-Package: libawa-questions7-dev
+Package: libawa-questions1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-questions1.1.0 (= ${binary:Version}),
- libawa7-dev,
- libawa-tags7-dev,
- libawa-workspaces7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Question plugin for AWA (Development)
  This is the Question plugin for Ada Web Application.
 
-Package: libawa-settings1.1.0
+Package: libawa-settings2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: User settings plugin for AWA (Runtime)
  This is the user settings plugin for Ada Web Application.
 
-Package: libawa-settings7-dev
+Package: libawa-settings1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-settings1.1.0 (= ${binary:Version}),
- libawa7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: User settings plugin for AWA (Development)
  This is the user settings plugin for Ada Web Application.
 
-Package: libawa-setup1.1.0
+Package: libawa-setup2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Ada Web Application Setup (Runtime)
  The AWA.Setup package implements a simple setup application
  that allows to configure the database, the Google and Facebook
@@ -299,13 +250,11 @@ Description: Ada Web Application Setup (Runtime)
  It is intended to help in the installation process of any AWA-based
  application.
 
-Package: libawa-setup7-dev
+Package: libawa-setup1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-setup1.1.0 (= ${binary:Version}),
- libawa7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Ada Web Application Setup (development)
  The AWA.Setup package implements a simple setup application
  that allows to configure the database, the Google and Facebook
@@ -313,123 +262,108 @@ Description: Ada Web Application Setup (development)
  It is intended to help in the installation process of any AWA-based
  application.
 
-Package: libawa-storages1.1.0
+Package: libawa-storages2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa-workspaces1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Storage plugin for AWA (Runtime)
  This is the Storage plugin for Ada Web Application.
 
-Package: libawa-storages7-dev
+Package: libawa-storages1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-storages1.1.0 (= ${binary:Version}),
- libawa-workspaces7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Storage plugin for AWA (Development)
  This is the Storage plugin for Ada Web Application.
 
-Package: libawa-tags1.1.0
+Package: libawa-tags2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Tags plugin for AWA (Runtime)
  This is the Tags plugin for Ada Web Application.  The Tags plugin
  allows one to integrate and use easily tags in an application.
 
-Package: libawa-tags7-dev
+Package: libawa-tags1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-tags1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Tags plugin for AWA (Runtime)
  This is the Tags plugin for Ada Web Application.  The Tags plugin allows
  to integrate and use easily tags in an application.
 
-Package: libawa-trumbowyg1.1.0
+Package: libawa-trumbowyg2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Trumbowyg Javascript Editor plugin for AWA (Runtime)
  This is the Trumbowyg plugin for Ada Web Application.
 
-Package: libawa-votes1.1.0
+Package: libawa-votes2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Votes plugin for AWA (Runtime)
  This is the Votes plugin for Ada Web Application.  The Votes plugin allows
  to easily add voting features to an application.
 
-Package: libawa-votes7-dev
+Package: libawa-votes1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-votes1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Votes plugin for AWA (Development)
  This is the Votes plugin for Ada Web Application.  The Votes plugin allows
  to easily add voting features to an application.
 
-Package: libawa-wikis1.1.0
+Package: libawa-wikis2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
 Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa1.1.0 (= ${binary:Version}),
- libawa-workspaces1.1.0 (= ${binary:Version}),
- libawa-jobs1.1.0 (= ${binary:Version}),
- libawa-counters1.1.0 (= ${binary:Version}),
- libawa-tags1.1.0 (= ${binary:Version}),
- libawa-images1.1.0 (= ${binary:Version}),
- libawa-markedit1.1.0 (= ${binary:Version}),
- libawa-flotcharts1.1.0 (= ${binary:Version}),
- libawa-storages1.1.0 (= ${binary:Version})
+ libawa-markedit2.1.0 (= ${binary:Version}),
+ libawa-flotcharts2.1.0 (= ${binary:Version}),
+ libawa-trumbowyg2.1.0 (= ${binary:Version})
 Description: Wiki plugin for AWA (Runtime)
  This is the Wiki plugin for Ada Web Application.
 
-Package: libawa-wikis7-dev
+Package: libawa-wikis1-dev
 Section: libdevel
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends},
- libawa7-dev,
- libawa-workspaces7-dev,
- libawa-jobs7-dev,
- libawa-tags7-dev,
- libawa-counters7-dev,
- libawa-images7-dev,
- libawa-storages7-dev,
- libawa-wikis1.1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Wiki plugin for AWA (Development)
  This is the Wiki plugin for Ada Web Application.
 
-Package: libawa-workspaces1.1.0
+Package: libawa-workspaces2.1.0
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support
-Depends: ${shlibs:Depends}, ${misc:Depends}, libawa1.1.0 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Workspace plugin for AWA (Runtime)
  This is the Workspace plugin for Ada Web Application.
 
-Package: libawa-workspaces7-dev
+Package: libawa-workspaces1-dev
 Section: libdevel
 Architecture: any
-Depends: ${shlibs:Depends}, libawa-workspaces1.1.0 (= ${binary:Version}), ${misc:Depends},
- libawa7-dev
+Depends: ${misc:Depends}, ${ada:Depends}
+Suggests: libawa-doc (= ${source:Version})
 Description: Workspace plugin for AWA (Development)
  This is the Workspace plugin for Ada Web Application.
 
+Package: libawa-doc
+Section: libdevel
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Suggests: gnat
+Description: Ada Web Application (documentation)
+ Ada Web Application is a framework to build a Web Application in Ada 2012.
+ The framework provides several ready to use and extendable modules that
+ are common to many web application.  This includes the login,
+ authentication, users, permissions, managing comments, tags, votes,
+ documents, images.  It provides a complete blog, question and answers
+ and a wiki module.
+ .
+ This package contains the documentation for Ada Web Application
+ in HTML and PDF.
