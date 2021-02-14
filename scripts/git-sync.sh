@@ -3,8 +3,8 @@ PKG_ROOT_DIR=`dirname $0`
 PKG_ROOT_DIR=`realpath $PKG_ROOT_DIR`
 PKG_ROOT_DIR=`dirname $PKG_ROOT_DIR`
 if test $# -ne 1; then
-   echo "Usage:    debuild.sh <dir>"
-   echo "Example:  debuild.sh ada-lzma"
+   echo "Usage:    git-sync.sh <dir>"
+   echo "Example:  git-sync.sh ada-lzma"
    exit 2
 fi
 
@@ -14,5 +14,6 @@ if test ! -d $PKG_DIR; then
    exit 1
 fi
 
-./scripts/debuild.sh $PKG_DIR
-./scripts/dpkg-install.sh $PKG_DIR
+cd $PKG_DIR
+git pull
+git merge remotes/origin/master

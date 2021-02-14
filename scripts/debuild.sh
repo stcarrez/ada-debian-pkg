@@ -1,4 +1,5 @@
 #!/bin/sh
+# build.sh 
 PKG_ROOT_DIR=`dirname $0`
 PKG_ROOT_DIR=`realpath $PKG_ROOT_DIR`
 PKG_ROOT_DIR=`dirname $PKG_ROOT_DIR`
@@ -14,5 +15,6 @@ if test ! -d $PKG_DIR; then
    exit 1
 fi
 
-./scripts/debuild.sh $PKG_DIR
-./scripts/dpkg-install.sh $PKG_DIR
+cd $PKG_DIR
+
+dpkg-buildpackage -rfakeroot -ui -i --sign-key=8285360D7F307A211AD113FC7D8211A1E929CEB3 -b
