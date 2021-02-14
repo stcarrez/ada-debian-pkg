@@ -10,61 +10,64 @@ $(foreach line,$(shell sed -n '\
   s/^ gnat, gnat-\([0-9.]\+\),$$/ \
     GNAT_VERSION:=\1 \
   /p;\
-  s/^Package: libada-swagger\([0-9.]\+\)$$/ \
-    soname:=libada_swagger.so.\1 \
+  s/^Package: libswagger\([0-9.]\+\)$$/ \
+    soname:=libswagger.so.\1 \
   /p;\
   ' debian/control),$(eval $(line)))
 
 DH_VERBOSE=1
 export DH_OPTIONS=-v
 
-include debian/rules.inc
-
+DEB_BUILD_MAINT_OPTIONS := hardening=+all
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/ada/debian_packaging-$(GNAT_VERSION).mk
 ADAFLAGS += -gnatafno -gnatVa -gnatwa
 
 %:
-	dh $@
+	dh $@ --with ada-library
 
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-shared
+	dh_auto_configure -- --enable-shared --enable-default-shared
 
 override_dh_auto_build-arch:
-	make all
+	make GPRFLAGS="-R -m -q"
 
-swagger_SRCDIR := src
-swagger_LNAME = libada_swagger
-swagger_SONAME = libada_swagger.so.0.1.0
-swagger_ANAME = libada_swagger.a
-swagger_LIB_PKG = libada-swagger0.1.0
-swagger_DEV_PKG = libada-swagger7-dev
-swagger_GPR = swagger.gpr
+override_dh_auto_test::
 
-swagger_server_SRCDIR := src/server
-swagger_server_LNAME = libada_swagger_server
-swagger_server_SONAME = libada_swagger_server.so.0.1.0
-swagger_server_ANAME = libada_swagger_server.a
-swagger_server_LIB_PKG = libada-swagger-server0.1.0
-swagger_server_DEV_PKG = libada-swagger-server7-dev
-swagger_server_GPR = swagger_server.gpr
+override_dh_auto_install::
 
-# To debug an instantiation, replace eval with error:
-$(foreach library, \
-  swagger swagger_server \
-  ,$(eval $(call library_template)))
+version=0.4.0
+aliversion=1
+
+swagger_LIB_PKG = libswagger${version}
+swagger_DEV_PKG = libswagger${aliversion}-dev
+
+swagger_generator_DEV_PKG = libswagger-generator${aliversion}-dev
+
+swagger_server_LIB_PKG = libswagger-server${soversion}
+swagger_server_DEV_PKG = libswagger-server${aliversion}-dev
 
 override_dh_install::
 	# Files installed in the web/ directory are part of the binary
 	# server package.
 	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr install
-	dh_installdirs --package=$(swagger_server_LIB_PKG) \
+	dh_installdirs --package=$(swagger_generator_DEV_PKG) \
 	   usr/share/swagger-ada
-	dh_installdirs --package=$(swagger_server_LIB_PKG) \
+	dh_install --package=$(swagger_generator_DEV_PKG) \
+	   usr/share/swagger-ada/openapi-generator-cli.jar usr/share/swagger-ada/
+	dh_install --package=$(swagger_generator_DEV_PKG) \
+	   usr/bin/openapi-generator usr/bin
+	dh_installdirs --package=$(swagger_server_DEV_PKG) \
 	   usr/share/swagger-ada/web
-	dh_installdirs --package=$(swagger_server_LIB_PKG) \
+	dh_installdirs --package=$(swagger_server_DEV_PKG) \
 	   usr/share/swagger-ada/web/ui
-	files=`cd $(CURDIR)/debian/tmp/usr/share/swagger-ada && find web -type f`; \
+	dh_installdirs --package=$(swagger_DEV_PKG) \
+	   usr/share/swagger-ada
+	files=`cd $(CURDIR)/web && find . -type f`; \
 	for i in $$files; do \
 		dir=`dirname $$i`; \
-		dh_install --package=$(swagger_server_LIB_PKG) \
-		   usr/share/swagger-ada/$$i usr/share/swagger-ada/$$dir ; \
+		dh_install --package=$(swagger_server_DEV_PKG) \
+		   usr/share/swagger-ada/web/$$i usr/share/swagger-ada/web/$$dir ; \
 	done
+	rm -rf $(CURDIR)/debian/tmp
+

@@ -1,5 +1,11 @@
-libada-swagger (1.0.0) unstable; urgency=medium
+libswagger (0.4.0) unstable; urgency=medium
+
+  * Update to 0.4.0
+
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sat, 13 Feb 2021 17:13:16 +0100
+
+libswagger (0.3.0) unstable; urgency=medium
 
   * Initial release to setup a debian library and development package
 
- -- Stephane Carrez <Stephane.Carrez@gmail.com>  Sat, 14 Jul 2018 16:59:06 +0200
+ -- Stephane Carrez <Stephane.Carrez@gmail.com>  Tue, 10 Nov 2020 21:19:06 +0100
