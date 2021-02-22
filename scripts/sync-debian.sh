@@ -21,7 +21,17 @@ cp $SRC/copyright $DST/copyright
 if test -f $SRC/examples.gpr; then
   cp $SRC/examples.gpr $DST/examples.gpr
 fi
+if test -f $SRC/utilada.gpr; then
+  cp $SRC/utilada.gpr $DST/tilada.gpr
+fi
+if test -f $SRC/utilada_http.gpr; then
+  cp $SRC/utilada_http.gpr $DST/tilada_http.gpr
+fi
 for i in `find $SRC -name '*.docs'`; do
+  NAME=`basename $i`
+  cp $i $DST/$NAME
+done
+for i in `find $SRC -name '*.install'`; do
   NAME=`basename $i`
   cp $i $DST/$NAME
 done
