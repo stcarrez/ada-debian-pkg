@@ -149,7 +149,7 @@ debian_info "libwiki*.deb" "Ada Wiki Library"
 
 debian_info "libado*.deb" "Ada Database Objects"
 
-debian_info "libswagger*.deb" "OpenAPI Ada Library"
+debian_info "libopenapi*.deb" "OpenAPI Ada Library"
 
 debian_info "libawa*.deb" "Ada Web Application"
 
