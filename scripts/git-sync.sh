@@ -15,5 +15,6 @@ if test ! -d $PKG_DIR; then
 fi
 
 cd $PKG_DIR
+git checkout debian-gnat-9
 git pull
 git merge remotes/origin/master

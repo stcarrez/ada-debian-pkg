@@ -1,7 +1,7 @@
 #!/bin/sh
 # build.sh 
 PKG_REPO_DIR=/build/repo
-PKG_REPO_NAME=bionic
+PKG_REPO_NAME=focal
 PKG_ROOT_DIR=`dirname $0`
 PKG_ROOT_DIR=`realpath $PKG_ROOT_DIR`
 PKG_ROOT_DIR=`dirname $PKG_ROOT_DIR`
