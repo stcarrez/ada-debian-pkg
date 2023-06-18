@@ -65,8 +65,7 @@ function header() {
     <ui:param name="title" value="Debian Package"/>
     <ui:param name="pageStyle" value="page-download page-$BASE"/>
     <ui:define name="pageBody">
-      <div id='awa-content'>
-          <div class='grid_9'>
+          <div class='awa-grid-9'>
 <ui:include src="../../views/awa-project.xhtml"/>
 <div class='apt-info'>
 EOF
@@ -77,12 +76,11 @@ function footer() {
   cat <<EOF >> $1
 </div>
           </div>
-          <div class='grid_3 blog-post-info'>
+          <div class='awa-grid-3 blog-post-info'>
               <ui:include src="../../blogs/lists/post-info.xhtml"/>
               <ui:include src="../../views/vacs-projects.xhtml"/>
               <ui:include src="../../views/ada-promote.xhtml"/>
           </div>
-      </div>
     </ui:define>
 </ui:composition>
 EOF
